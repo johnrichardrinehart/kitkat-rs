@@ -1,0 +1,28 @@
+[package]
+name = "kitkat-rs"
+version = "0.1.0"
+edition = "2024"
+description = "Minimal image viewer for terminals implementing the Kitty graphics protocol"
+repository = "https://github.com/johnrichardrinehart/kitkat-rs"
+
+[features]
+default = ["quality"]
+quality = ["dep:fast_image_resize", "image/png"]
+faster = ["dep:fast_image_resize", "fast_image_resize/rayon", "image/png"]
+low-rss = ["dep:png"]
+fastest = ["dep:fast_image_resize", "fast_image_resize/rayon", "image/png"]
+
+[dependencies]
+image = { version = "0.25", default-features = false, features = ["jpeg"] }
+fast_image_resize = { version = "6.1", default-features = false, features = ["std"], optional = true }
+png = { version = "0.18", optional = true }
+
+[dev-dependencies]
+image = { version = "0.25", default-features = false, features = ["png"] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "z"
+panic = "abort"
+strip = "symbols"
